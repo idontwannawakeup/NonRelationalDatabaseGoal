@@ -1,11 +1,13 @@
 using Microsoft.Azure.Cosmos;
+using NonRelationalDatabaseGoal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 static async Task<CosmosClient> InitializeCosmosClientAsync(string connectionString)
 {
     var cosmosClient = new CosmosClient(connectionString);
-    var database = await cosmosClient.CreateDatabaseIfNotExistsAsync("NonRelationalDatabaseGoal");
+    var databaseResponse = await cosmosClient.CreateDatabaseIfNotExistsAsync("NonRelationalDatabaseGoal");
+    await databaseResponse.Database.CreateContainerIfNotExistsAsync("Users", "/path");
     return cosmosClient;
 }
 
@@ -15,6 +17,8 @@ builder.Services.AddSingleton<CosmosClient>(_ =>
         .GetAwaiter()
         .GetResult();
 });
+
+builder.Services.AddTransient<UserService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
