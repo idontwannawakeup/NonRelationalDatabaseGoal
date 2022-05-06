@@ -1,15 +1,27 @@
+using Microsoft.Azure.Cosmos;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+static async Task<CosmosClient> InitializeCosmosClientAsync(string connectionString)
+{
+    var cosmosClient = new CosmosClient(connectionString);
+    var database = await cosmosClient.CreateDatabaseIfNotExistsAsync("NonRelationalDatabaseGoal");
+    return cosmosClient;
+}
+
+builder.Services.AddSingleton<CosmosClient>(_ =>
+{
+    return InitializeCosmosClientAsync(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .GetAwaiter()
+        .GetResult();
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
