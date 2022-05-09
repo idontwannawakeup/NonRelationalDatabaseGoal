@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using NonRelationalDatabaseGoal.Interfaces;
 
 namespace NonRelationalDatabaseGoal.Models;
 
-public class User
+public class User : IIdentifiable
 {
     [JsonProperty(PropertyName = "id")]
     public string Id { get; set; } = string.Empty;

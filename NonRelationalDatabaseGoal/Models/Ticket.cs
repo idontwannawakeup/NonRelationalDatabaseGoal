@@ -1,7 +1,11 @@
-﻿namespace NonRelationalDatabaseGoal.Models;
+﻿using Newtonsoft.Json;
+using NonRelationalDatabaseGoal.Interfaces;
 
-public class Ticket
+namespace NonRelationalDatabaseGoal.Models;
+
+public class Ticket : IIdentifiable
 {
+    [JsonProperty(PropertyName = "id")]
     public string Id { get; set; } = default!;
     public string ProjectId { get; set; } = default!;
     public string? ExecutorId { get; set; }

@@ -1,7 +1,11 @@
-﻿namespace NonRelationalDatabaseGoal.Models;
+﻿using Newtonsoft.Json;
+using NonRelationalDatabaseGoal.Interfaces;
 
-public class Team
+namespace NonRelationalDatabaseGoal.Models;
+
+public class Team : IIdentifiable
 {
+    [JsonProperty(PropertyName = "id")]
     public string Id { get; set; } = default!;
     public string? LeaderId { get; set; }
 
