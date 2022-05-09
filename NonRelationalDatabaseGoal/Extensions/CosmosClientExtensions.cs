@@ -8,6 +8,10 @@ public static class CosmosClientExtensions
         "NonRelationalDatabaseGoal",
         "Users");
 
+    public static Container GetTeamsContainer(this CosmosClient client) => client.GetContainer(
+        "NonRelationalDatabaseGoal",
+        "Teams");
+
     public static async Task<IEnumerable<T>> GetAllAsync<T>(this Container container)
     {
         using var iterator = container.GetItemQueryIterator<T>(new QueryDefinition("SELECT * FROM c"));
