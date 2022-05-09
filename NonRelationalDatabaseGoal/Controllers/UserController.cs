@@ -1,16 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NonRelationalDatabaseGoal.Models;
 using NonRelationalDatabaseGoal.Services;
 
 namespace NonRelationalDatabaseGoal.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly UserService _service;
 
-    public UserController(UserService userService) => _userService = userService;
+    public UserController(UserService service) => _service = service;
 
     [HttpGet]
-    public IActionResult GetAll() => Ok(_userService.GetAll());
+    public IActionResult GetAll() => Ok(_service.GetAll());
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get([FromRoute] string id) => Ok(await _service.GetByIdAsync(id));
+
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] User user)
+    {
+        await _service.CreateAsync(user);
+        return NoContent();
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromBody] User user)
+    {
+        await _service.UpdateAsync(user);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] string id)
+    {
+        await _service.DeleteAsync(id);
+        return NoContent();
+    }
 }

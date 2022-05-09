@@ -9,17 +9,17 @@ public class UserService
 
     public UserService(CosmosClient client) => _usersContainer = client.GetUsersContainer();
 
-    public IAsyncEnumerable<User> GetAll() => _usersContainer.GetAll<User>();
+    public IAsyncEnumerable<Models.User> GetAll() => _usersContainer.GetAll<Models.User>();
 
-    public async Task<User> GetByIdAsync(string id) => await _usersContainer.ReadItemAsync<User>(
+    public async Task<Models.User> GetByIdAsync(string id) => await _usersContainer.ReadItemAsync<Models.User>(
         id, new PartitionKey(id));
 
-    public async Task CreateAsync(User user) => await _usersContainer.CreateItemAsync<User>(
+    public async Task CreateAsync(Models.User user) => await _usersContainer.CreateItemAsync(
         user, new PartitionKey(user.Id));
 
-    public async Task UpdateAsync(User user) => await _usersContainer.UpsertItemAsync<User>(
+    public async Task UpdateAsync(Models.User user) => await _usersContainer.UpsertItemAsync(
         user, new PartitionKey(user.Id));
 
-    public async Task DeleteAsync(string id) => await _usersContainer.DeleteItemAsync<User>(
+    public async Task DeleteAsync(string id) => await _usersContainer.DeleteItemAsync<Models.User>(
         id, new PartitionKey(id));
 }
