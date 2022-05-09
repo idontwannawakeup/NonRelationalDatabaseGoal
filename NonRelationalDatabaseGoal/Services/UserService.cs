@@ -14,7 +14,7 @@ public class UserService
     public async Task<Models.User> GetByIdAsync(string id) => await _usersContainer.ReadItemAsync<Models.User>(
         id, new PartitionKey(id));
 
-    public async Task CreateAsync(Models.User user) => await _usersContainer.CreateItemAsync(
+    public async Task CreateAsync(Models.User user) => await _usersContainer.CreateItemAsync<Models.User>(
         user, new PartitionKey(user.Id));
 
     public async Task UpdateAsync(Models.User user) => await _usersContainer.UpsertItemAsync(

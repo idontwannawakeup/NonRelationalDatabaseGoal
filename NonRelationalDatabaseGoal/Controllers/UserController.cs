@@ -21,6 +21,7 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] User user)
     {
+        user.Id = Guid.NewGuid().ToString();
         await _service.CreateAsync(user);
         return NoContent();
     }
