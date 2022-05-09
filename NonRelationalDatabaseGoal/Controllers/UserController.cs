@@ -13,7 +13,7 @@ public class UserController : ControllerBase
     public UserController(UserService service) => _service = service;
 
     [HttpGet]
-    public IActionResult GetAll() => Ok(_service.GetAll());
+    public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get([FromRoute] string id) => Ok(await _service.GetByIdAsync(id));

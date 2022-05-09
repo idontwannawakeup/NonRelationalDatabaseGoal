@@ -8,16 +8,20 @@ public static class CosmosClientExtensions
         "NonRelationalDatabaseGoal",
         "Users");
 
-    public static async IAsyncEnumerable<T> GetAll<T>(this Container container)
+    public static async Task<IEnumerable<T>> GetAllAsync<T>(this Container container)
     {
-        var query = container.GetItemQueryIterator<T>(new QueryDefinition("SELECT * FROM c"));
-        while (query.HasMoreResults)
+        using var iterator = container.GetItemQueryIterator<T>(new QueryDefinition("SELECT * FROM c"));
+        return await iterator.ReadAllAsync();
+    }
+
+    public static async Task<IEnumerable<T>> ReadAllAsync<T>(this FeedIterator<T> iterator)
+    {
+        var feedResponses = new List<FeedResponse<T>>();
+        while (iterator.HasMoreResults)
         {
-            var set = await query.ReadNextAsync();
-            foreach (var item in set)
-            {
-                yield return item;
-            }
+            feedResponses.Add(await iterator.ReadNextAsync());
         }
+
+        return feedResponses.SelectMany(item => item);
     }
 }
