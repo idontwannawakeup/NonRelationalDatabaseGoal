@@ -12,6 +12,14 @@ public static class CosmosClientExtensions
         "NonRelationalDatabaseGoal",
         "Teams");
 
+    public static Container GetProjectsContainer(this CosmosClient client) => client.GetContainer(
+        "NonRelationalDatabaseGoal",
+        "Projects");
+
+    public static Container GetTicketsContainer(this CosmosClient client) => client.GetContainer(
+        "NonRelationalDatabaseGoal",
+        "Tickets");
+
     public static async Task<IEnumerable<T>> GetAllAsync<T>(this Container container)
     {
         using var iterator = container.GetItemQueryIterator<T>(new QueryDefinition("SELECT * FROM c"));
