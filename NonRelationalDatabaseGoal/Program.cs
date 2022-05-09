@@ -7,7 +7,7 @@ static async Task<CosmosClient> InitializeCosmosClientAsync(string connectionStr
 {
     var cosmosClient = new CosmosClient(connectionString);
     var databaseResponse = await cosmosClient.CreateDatabaseIfNotExistsAsync("NonRelationalDatabaseGoal");
-    await databaseResponse.Database.CreateContainerIfNotExistsAsync("Users", "/path");
+    await databaseResponse.Database.CreateContainerIfNotExistsAsync("Users", "/id");
     return cosmosClient;
 }
 
