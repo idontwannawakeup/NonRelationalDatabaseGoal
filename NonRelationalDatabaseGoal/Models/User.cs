@@ -22,4 +22,7 @@ public class User : IIdentifiable
 
     [JsonProperty(PropertyName = "specialization")]
     public string? Specialization { get; set; }
+
+    [JsonProperty(PropertyName = "teams")]
+    public ICollection<string> Teams { get; set; } = Array.Empty<string>();
 }

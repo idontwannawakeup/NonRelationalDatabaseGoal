@@ -15,12 +15,12 @@ public abstract class GenericService<T> where T : IIdentifiable
     public async Task<T> GetByIdAsync(string id) => await Container.ReadItemAsync<T>(
         id, new PartitionKey(id));
 
-    public async Task CreateAsync(T item) => await Container.CreateItemAsync(
+    public virtual async Task CreateAsync(T item) => await Container.CreateItemAsync(
         item, new PartitionKey(item.Id));
 
-    public async Task UpdateAsync(T item) => await Container.UpsertItemAsync(
+    public virtual async Task UpdateAsync(T item) => await Container.UpsertItemAsync(
         item, new PartitionKey(item.Id));
 
-    public async Task DeleteAsync(string id) => await Container.DeleteItemAsync<T>(
+    public virtual async Task DeleteAsync(string id) => await Container.DeleteItemAsync<T>(
         id, new PartitionKey(id));
 }
