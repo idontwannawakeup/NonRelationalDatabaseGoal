@@ -4,7 +4,7 @@ using NonRelationalDatabaseGoal.Interfaces;
 
 namespace NonRelationalDatabaseGoal.Services;
 
-public class GenericService<T> where T : IIdentifiable
+public abstract class GenericService<T> where T : IIdentifiable
 {
     protected Container Container { get; }
 

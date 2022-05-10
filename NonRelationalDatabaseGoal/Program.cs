@@ -22,6 +22,9 @@ builder.Services.AddSingleton<CosmosClient>(_ =>
 });
 
 builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<TeamService>();
+builder.Services.AddTransient<ProjectService>();
+builder.Services.AddTransient<TicketService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
