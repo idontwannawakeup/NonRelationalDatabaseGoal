@@ -14,7 +14,7 @@ public class TeamController : ControllerBase
     public TeamController(TeamService service) => _service = service;
 
     [HttpGet]
-    public async Task<IActionResult> Get(QueryStringParameters parameters) =>
+    public async Task<IActionResult> Get([FromQuery] QueryStringParameters parameters) =>
         Ok(await _service.GetAsync(parameters));
 
     [HttpGet("{id}")]
