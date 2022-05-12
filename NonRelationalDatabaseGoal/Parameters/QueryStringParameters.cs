@@ -1,4 +1,6 @@
-﻿using NonRelationalDatabaseGoal.Enums;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using NonRelationalDatabaseGoal.Enums;
 
 namespace NonRelationalDatabaseGoal.Parameters;
 
@@ -9,6 +11,8 @@ public class QueryStringParameters
 
     public int PageNumber { get; set; } = 1;
     public string? OrderBy { get; set; }
+
+    [JsonConverter(typeof(StringEnumConverter))]
     public Order Order { get; set; }
 
     public int PageSize
