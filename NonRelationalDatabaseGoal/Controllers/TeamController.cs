@@ -39,4 +39,18 @@ public class TeamController : ControllerBase
         await _service.DeleteAsync(id);
         return NoContent();
     }
+
+    [HttpPost("{id}/members/{memberId}")]
+    public async Task<IActionResult> AddMember([FromRoute] string id, [FromRoute] string memberId)
+    {
+        await _service.AddMemberAsync(id, memberId);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}/members/{memberId}")]
+    public async Task<IActionResult> DeleteMember([FromRoute] string id, [FromRoute] string memberId)
+    {
+        await _service.DeleteMemberAsync(id, memberId);
+        return NoContent();
+    }
 }
