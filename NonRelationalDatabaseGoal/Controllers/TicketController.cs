@@ -40,4 +40,11 @@ public class TicketController : ControllerBase
         await _service.DeleteAsync(id);
         return NoContent();
     }
+
+    [HttpPut("{id}/assign/{executorId}")]
+    public async Task<IActionResult> AssignExecutor([FromRoute] string id, string executorId)
+    {
+        await _service.AssignExecutorAsync(id, executorId);
+        return NoContent();
+    }
 }
