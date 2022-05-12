@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using NonRelationalDatabaseGoal.Extensions;
+using NonRelationalDatabaseGoal.Extensions.Filtering;
 using NonRelationalDatabaseGoal.Models;
 using NonRelationalDatabaseGoal.Parameters;
 
@@ -15,8 +16,9 @@ public class TicketService : GenericService<Ticket>
         UsersContainer = client.GetUsersContainer();
     }
 
-    public async Task<IEnumerable<Ticket>> GetAsync(QueryStringParameters parameters) =>
+    public async Task<IEnumerable<Ticket>> GetAsync(TicketParameters parameters) =>
         await Container.GetItemLinqQueryable<Ticket>()
+            .ApplyFiltering(parameters)
             .ApplyOrdering(parameters)
             .ApplyPagination(parameters)
             .ToFeedIterator()

@@ -14,7 +14,7 @@ public class TicketController : ControllerBase
     public TicketController(TicketService service) => _service = service;
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] QueryStringParameters parameters) =>
+    public async Task<IActionResult> Get([FromQuery] TicketParameters parameters) =>
         Ok(await _service.GetAsync(parameters));
 
     [HttpGet("{id}")]
