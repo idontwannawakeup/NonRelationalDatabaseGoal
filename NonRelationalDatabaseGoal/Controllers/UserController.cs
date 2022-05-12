@@ -14,7 +14,7 @@ public class UserController : ControllerBase
     public UserController(UserService service) => _service = service;
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] QueryStringParameters parameters) =>
+    public async Task<IActionResult> Get([FromQuery] UserParameters parameters) =>
         Ok(await _service.GetAsync(parameters));
 
     [HttpGet("{id}")]
