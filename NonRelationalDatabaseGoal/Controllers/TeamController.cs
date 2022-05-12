@@ -40,6 +40,9 @@ public class TeamController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("{id}/members")]
+    public async Task<IActionResult> GetMembers([FromRoute] string id) => Ok(await _service.GetMembersAsync(id));
+
     [HttpPost("{id}/members/{memberId}")]
     public async Task<IActionResult> AddMember([FromRoute] string id, [FromRoute] string memberId)
     {

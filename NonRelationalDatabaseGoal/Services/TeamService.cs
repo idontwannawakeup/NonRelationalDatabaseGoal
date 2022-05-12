@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
 using NonRelationalDatabaseGoal.Extensions;
 using NonRelationalDatabaseGoal.Models;
 
@@ -23,6 +24,15 @@ public class TeamService : GenericService<Team>
         team.Members.Add(leader.Id);
         await base.CreateAsync(team);
         await UsersContainer.UpsertItemAsync(leader, new PartitionKey(leader.Id));
+    }
+
+    public async Task<IEnumerable<Models.User>> GetMembersAsync(string teamId)
+    {
+        Team team = await base.GetByIdAsync(teamId);
+        return await UsersContainer.GetItemLinqQueryable<Models.User>()
+            .Where(user => team.Members.Contains(user.Id))
+            .ToFeedIterator()
+            .ReadAllAsync();
     }
 
     public async Task AddMemberAsync(string teamId, string memberId)
