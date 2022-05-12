@@ -47,4 +47,11 @@ public class TicketController : ControllerBase
         await _service.AssignExecutorAsync(id, executorId);
         return NoContent();
     }
+
+    [HttpDelete("{id}/executor")]
+    public async Task<IActionResult> RemoveExecutor([FromRoute] string id)
+    {
+        await _service.RemoveExecutorAsync(id);
+        return NoContent();
+    }
 }
