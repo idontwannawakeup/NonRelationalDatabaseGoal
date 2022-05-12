@@ -2,6 +2,7 @@
 using Microsoft.Azure.Cosmos.Linq;
 using NonRelationalDatabaseGoal.Extensions;
 using NonRelationalDatabaseGoal.Models;
+using NonRelationalDatabaseGoal.Parameters;
 
 namespace NonRelationalDatabaseGoal.Services;
 
@@ -13,6 +14,13 @@ public class TeamService : GenericService<Team>
     {
         UsersContainer = client.GetUsersContainer();
     }
+
+    public async Task<IEnumerable<Team>> GetAsync(QueryStringParameters parameters) =>
+        await Container.GetItemLinqQueryable<Team>()
+            .ApplyOrdering(parameters)
+            .ApplyPagination(parameters)
+            .ToFeedIterator()
+            .ReadAllAsync();
 
     public override async Task CreateAsync(Team team)
     {
