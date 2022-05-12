@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NonRelationalDatabaseGoal.Models;
+using NonRelationalDatabaseGoal.Parameters;
 using NonRelationalDatabaseGoal.Services;
 
 namespace NonRelationalDatabaseGoal.Controllers;
@@ -13,10 +14,12 @@ public class TicketController : ControllerBase
     public TicketController(TicketService service) => _service = service;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
+    public async Task<IActionResult> Get([FromQuery] QueryStringParameters parameters) =>
+        Ok(await _service.GetAsync(parameters));
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get([FromRoute] string id) => Ok(await _service.GetByIdAsync(id));
+    public async Task<IActionResult> Get([FromRoute] string id) =>
+        Ok(await _service.GetByIdAsync(id));
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Ticket ticket)
