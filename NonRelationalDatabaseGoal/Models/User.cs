@@ -25,4 +25,7 @@ public class User : IIdentifiable
 
     [JsonProperty(PropertyName = "teams")]
     public ICollection<string> Teams { get; set; } = new List<string>();
+
+    [JsonProperty(PropertyName = "assignedTickets")]
+    public ICollection<string> AssignedTickets { get; set; } = new List<string>();
 }

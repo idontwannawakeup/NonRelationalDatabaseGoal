@@ -21,6 +21,7 @@ public class TicketService : GenericService<Ticket>
             new PartitionKey(executorId));
 
         ticket.ExecutorId = executor.Id;
+        executor.AssignedTickets.Add(ticketId);
         await base.UpdateAsync(ticket);
     }
 }
