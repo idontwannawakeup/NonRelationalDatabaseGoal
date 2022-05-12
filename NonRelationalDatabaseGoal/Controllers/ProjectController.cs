@@ -14,7 +14,7 @@ public class ProjectController : ControllerBase
     public ProjectController(ProjectService service) => _service = service;
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] QueryStringParameters parameters) =>
+    public async Task<IActionResult> Get([FromQuery] ProjectParameters parameters) =>
         Ok(await _service.GetAsync(parameters));
 
     [HttpGet("{id}")]
