@@ -9,12 +9,12 @@ namespace NonRelationalDatabaseGoal.Services;
 
 public class TeamService : GenericService<Team>
 {
-    protected Container UsersContainer { get; }
-
     public TeamService(CosmosClient client) : base(client.GetTeamsContainer())
     {
         UsersContainer = client.GetUsersContainer();
     }
+
+    protected Container UsersContainer { get; }
 
     public async Task<IEnumerable<Team>> GetAsync(TeamParameters parameters) =>
         await Container.GetItemLinqQueryable<Team>()

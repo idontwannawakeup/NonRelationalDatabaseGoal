@@ -22,4 +22,7 @@ public class Team : IIdentifiable
 
     [JsonProperty(PropertyName = "members")]
     public ICollection<string> Members { get; set; } = new List<string>();
+
+    [JsonProperty(PropertyName = "projects")]
+    public ICollection<string> Projects { get; set; } = new List<string>();
 }
