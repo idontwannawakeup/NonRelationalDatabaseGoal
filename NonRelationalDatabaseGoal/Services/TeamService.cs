@@ -121,6 +121,11 @@ public class TeamService : GenericService<Team>
             memberId,
             new PartitionKey(memberId));
 
+        if (team.LeaderId == member.Id)
+        {
+            team.LeaderId = null;
+        }
+
         team.Members.Remove(memberId);
         member.Teams.Remove(teamId);
         await base.UpdateAsync(team);
