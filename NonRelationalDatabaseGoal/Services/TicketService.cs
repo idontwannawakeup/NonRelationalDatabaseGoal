@@ -34,7 +34,7 @@ public class TicketService : GenericService<Ticket>
                 new PartitionKey(ticket.ExecutorId));
 
             user.AssignedTickets.Add(ticket.Id);
-            await UsersContainer.UpsertItemAsync(user.Id, new PartitionKey(user.Id));
+            await UsersContainer.UpsertItemAsync(user, new PartitionKey(user.Id));
         }
 
         await base.CreateAsync(ticket);
@@ -48,19 +48,19 @@ public class TicketService : GenericService<Ticket>
             new PartitionKey(ticket.ProjectId));
 
         project.Tickets.Remove(ticket.Id);
-
-        await base.DeleteAsync(ticket.Id);
         await ProjectsContainer.UpsertItemAsync(project, new PartitionKey(project.Id));
 
         if (!string.IsNullOrWhiteSpace(ticket.ExecutorId))
         {
             Models.User user = await UsersContainer.ReadItemAsync<Models.User>(
                 ticket.ExecutorId,
-                new PartitionKey(ticket.Id));
+                new PartitionKey(ticket.ExecutorId));
 
             user.AssignedTickets.Remove(ticket.Id);
-            await UsersContainer.UpsertItemAsync(user.Id, new PartitionKey(user.Id));
+            await UsersContainer.UpsertItemAsync(user, new PartitionKey(user.Id));
         }
+
+        await base.DeleteAsync(ticket.Id);
     }
 
     public async Task<IEnumerable<Ticket>> GetAsync(TicketParameters parameters) =>
