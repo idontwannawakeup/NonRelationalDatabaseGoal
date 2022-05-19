@@ -1,11 +1,12 @@
-﻿using NonRelationalDatabaseGoal.Parameters;
+﻿using NonRelationalDatabaseGoal.Models;
+using NonRelationalDatabaseGoal.Parameters;
 
 namespace NonRelationalDatabaseGoal.Extensions.Filtering;
 
 public static class UserFilteringExtensions
 {
-    public static IQueryable<Models.User> ApplyFiltering(
-        this IQueryable<Models.User> users,
+    public static IQueryable<AppUser> ApplyFiltering(
+        this IQueryable<AppUser> users,
         UserParameters parameters)
     {
         if (!string.IsNullOrWhiteSpace(parameters.TeamId))

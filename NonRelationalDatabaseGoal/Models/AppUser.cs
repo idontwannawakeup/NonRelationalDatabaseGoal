@@ -3,7 +3,7 @@ using NonRelationalDatabaseGoal.Interfaces;
 
 namespace NonRelationalDatabaseGoal.Models;
 
-public class User : IIdentifiable
+public class AppUser : IIdentifiable
 {
     [JsonProperty(PropertyName = "id")]
     public string Id { get; set; } = string.Empty;

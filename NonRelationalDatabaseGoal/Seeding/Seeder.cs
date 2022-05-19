@@ -1,10 +1,11 @@
 ﻿using Microsoft.Azure.Cosmos;
 using NonRelationalDatabaseGoal.Extensions;
+using NonRelationalDatabaseGoal.Interfaces;
 using NonRelationalDatabaseGoal.Models;
 
 namespace NonRelationalDatabaseGoal.Seeding;
 
-public class Seeder
+public class Seeder : ISeeder
 {
     private readonly CosmosClient _client;
     private readonly ILogger<Seeder> _logger;
@@ -19,7 +20,7 @@ public class Seeder
 
     public async Task SeedDatabaseAsync()
     {
-        var user = new Models.User
+        var user = new Models.AppUser
         {
             Id = _userId,
             UserName = "User1",

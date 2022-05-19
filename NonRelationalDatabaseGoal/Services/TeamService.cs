@@ -2,12 +2,13 @@
 using Microsoft.Azure.Cosmos.Linq;
 using NonRelationalDatabaseGoal.Extensions;
 using NonRelationalDatabaseGoal.Extensions.Filtering;
+using NonRelationalDatabaseGoal.Interfaces.Services;
 using NonRelationalDatabaseGoal.Models;
 using NonRelationalDatabaseGoal.Parameters;
 
 namespace NonRelationalDatabaseGoal.Services;
 
-public class TeamService : GenericService<Team>
+public class TeamService : GenericService<Team>, ITeamService
 {
     public TeamService(CosmosClient client) : base(client.GetTeamsContainer())
     {
@@ -22,7 +23,7 @@ public class TeamService : GenericService<Team>
 
     public override async Task CreateAsync(Team team)
     {
-        Models.User leader = await UsersContainer.ReadItemAsync<Models.User>(
+        Models.AppUser leader = await UsersContainer.ReadItemAsync<AppUser>(
             team.LeaderId,
             new PartitionKey(team.LeaderId));
 
@@ -51,7 +52,7 @@ public class TeamService : GenericService<Team>
             {
                 if (ticket.ExecutorId is not null)
                 {
-                    Models.User user = await UsersContainer.ReadItemAsync<Models.User>(
+                    AppUser user = await UsersContainer.ReadItemAsync<AppUser>(
                         ticket.ExecutorId,
                         new PartitionKey(ticket.ExecutorId));
 
@@ -70,7 +71,7 @@ public class TeamService : GenericService<Team>
                 new PartitionKey(project.Id));
         }
 
-        var members = await UsersContainer.GetItemLinqQueryable<Models.User>()
+        var members = await UsersContainer.GetItemLinqQueryable<AppUser>()
             .Where(user => user.Teams.Contains(team.Id))
             .ToFeedIterator()
             .ReadAllAsync();
@@ -92,10 +93,10 @@ public class TeamService : GenericService<Team>
             .ToFeedIterator()
             .ReadAllAsync();
 
-    public async Task<IEnumerable<Models.User>> GetMembersAsync(string teamId)
+    public async Task<IEnumerable<Models.AppUser>> GetMembersAsync(string teamId)
     {
         Team team = await base.GetByIdAsync(teamId);
-        return await UsersContainer.GetItemLinqQueryable<Models.User>()
+        return await UsersContainer.GetItemLinqQueryable<AppUser>()
             .Where(user => team.Members.Contains(user.Id))
             .ToFeedIterator()
             .ReadAllAsync();
@@ -104,7 +105,7 @@ public class TeamService : GenericService<Team>
     public async Task AddMemberAsync(string teamId, string memberId)
     {
         Team team = await base.GetByIdAsync(teamId);
-        Models.User member = await UsersContainer.ReadItemAsync<Models.User>(
+        AppUser member = await UsersContainer.ReadItemAsync<AppUser>(
             memberId,
             new PartitionKey(memberId));
 
@@ -117,7 +118,7 @@ public class TeamService : GenericService<Team>
     public async Task DeleteMemberAsync(string teamId, string memberId)
     {
         Team team = await base.GetByIdAsync(teamId);
-        Models.User member = await UsersContainer.ReadItemAsync<Models.User>(
+        AppUser member = await UsersContainer.ReadItemAsync<AppUser>(
             memberId,
             new PartitionKey(memberId));
 

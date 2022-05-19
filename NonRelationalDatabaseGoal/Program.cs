@@ -1,4 +1,6 @@
 using Microsoft.Azure.Cosmos;
+using NonRelationalDatabaseGoal.Interfaces;
+using NonRelationalDatabaseGoal.Interfaces.Services;
 using NonRelationalDatabaseGoal.Seeding;
 using NonRelationalDatabaseGoal.Services;
 
@@ -22,12 +24,12 @@ builder.Services.AddSingleton<CosmosClient>(_ =>
         .GetResult();
 });
 
-builder.Services.AddTransient<UserService>();
-builder.Services.AddTransient<TeamService>();
-builder.Services.AddTransient<ProjectService>();
-builder.Services.AddTransient<TicketService>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ITeamService, TeamService>();
+builder.Services.AddTransient<IProjectService, ProjectService>();
+builder.Services.AddTransient<ITicketService, TicketService>();
 
-builder.Services.AddTransient<Seeder>();
+builder.Services.AddTransient<ISeeder, Seeder>();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 

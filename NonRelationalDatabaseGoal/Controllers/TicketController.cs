@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NonRelationalDatabaseGoal.Interfaces.Services;
 using NonRelationalDatabaseGoal.Models;
 using NonRelationalDatabaseGoal.Models.Requests;
 using NonRelationalDatabaseGoal.Parameters;
-using NonRelationalDatabaseGoal.Services;
 
 namespace NonRelationalDatabaseGoal.Controllers;
 
@@ -10,9 +10,9 @@ namespace NonRelationalDatabaseGoal.Controllers;
 [Route("api/[controller]")]
 public class TicketController : ControllerBase
 {
-    private readonly TicketService _service;
+    private readonly ITicketService _service;
 
-    public TicketController(TicketService service) => _service = service;
+    public TicketController(ITicketService service) => _service = service;
 
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] TicketParameters parameters) =>

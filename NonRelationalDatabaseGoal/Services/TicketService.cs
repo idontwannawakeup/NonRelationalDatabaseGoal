@@ -2,12 +2,13 @@
 using Microsoft.Azure.Cosmos.Linq;
 using NonRelationalDatabaseGoal.Extensions;
 using NonRelationalDatabaseGoal.Extensions.Filtering;
+using NonRelationalDatabaseGoal.Interfaces.Services;
 using NonRelationalDatabaseGoal.Models;
 using NonRelationalDatabaseGoal.Parameters;
 
 namespace NonRelationalDatabaseGoal.Services;
 
-public class TicketService : GenericService<Ticket>
+public class TicketService : GenericService<Ticket>, ITicketService
 {
     public TicketService(CosmosClient client) : base(client.GetTicketsContainer())
     {
@@ -29,7 +30,7 @@ public class TicketService : GenericService<Ticket>
 
         if (!string.IsNullOrWhiteSpace(ticket.ExecutorId))
         {
-            Models.User user = await UsersContainer.ReadItemAsync<Models.User>(
+            AppUser user = await UsersContainer.ReadItemAsync<AppUser>(
                 ticket.ExecutorId,
                 new PartitionKey(ticket.ExecutorId));
 
@@ -52,7 +53,7 @@ public class TicketService : GenericService<Ticket>
 
         if (!string.IsNullOrWhiteSpace(ticket.ExecutorId))
         {
-            Models.User user = await UsersContainer.ReadItemAsync<Models.User>(
+            AppUser user = await UsersContainer.ReadItemAsync<AppUser>(
                 ticket.ExecutorId,
                 new PartitionKey(ticket.ExecutorId));
 
@@ -74,7 +75,7 @@ public class TicketService : GenericService<Ticket>
     public async Task AssignExecutorAsync(string ticketId, string executorId)
     {
         Ticket ticket = await base.GetByIdAsync(ticketId);
-        Models.User executor = await UsersContainer.ReadItemAsync<Models.User>(
+        AppUser executor = await UsersContainer.ReadItemAsync<AppUser>(
             executorId,
             new PartitionKey(executorId));
 
@@ -94,7 +95,7 @@ public class TicketService : GenericService<Ticket>
     {
         if (!string.IsNullOrWhiteSpace(ticket.ExecutorId))
         {
-            Models.User executor = await UsersContainer.ReadItemAsync<Models.User>(
+            AppUser executor = await UsersContainer.ReadItemAsync<AppUser>(
                 ticket.ExecutorId,
                 new PartitionKey(ticket.ExecutorId));
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NonRelationalDatabaseGoal.Interfaces.Services;
 using NonRelationalDatabaseGoal.Models;
 using NonRelationalDatabaseGoal.Models.Requests;
 using NonRelationalDatabaseGoal.Parameters;
-using NonRelationalDatabaseGoal.Services;
 
 namespace NonRelationalDatabaseGoal.Controllers;
 
@@ -10,9 +10,9 @@ namespace NonRelationalDatabaseGoal.Controllers;
 [Route("api/[controller]")]
 public class TeamController : ControllerBase
 {
-    private readonly TeamService _service;
+    private readonly ITeamService _service;
 
-    public TeamController(TeamService service) => _service = service;
+    public TeamController(ITeamService service) => _service = service;
 
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] TeamParameters parameters) =>

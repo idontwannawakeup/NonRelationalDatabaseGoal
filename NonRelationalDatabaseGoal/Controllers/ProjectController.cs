@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NonRelationalDatabaseGoal.Interfaces.Services;
 using NonRelationalDatabaseGoal.Models;
 using NonRelationalDatabaseGoal.Models.Requests;
 using NonRelationalDatabaseGoal.Parameters;
-using NonRelationalDatabaseGoal.Services;
 
 namespace NonRelationalDatabaseGoal.Controllers;
 
@@ -10,9 +10,9 @@ namespace NonRelationalDatabaseGoal.Controllers;
 [Route("api/[controller]")]
 public class ProjectController : ControllerBase
 {
-    private readonly ProjectService _service;
+    private readonly IProjectService _service;
 
-    public ProjectController(ProjectService service) => _service = service;
+    public ProjectController(IProjectService service) => _service = service;
 
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] ProjectParameters parameters) =>

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NonRelationalDatabaseGoal.Interfaces.Services;
 using NonRelationalDatabaseGoal.Models;
 using NonRelationalDatabaseGoal.Models.Requests;
 using NonRelationalDatabaseGoal.Parameters;
-using NonRelationalDatabaseGoal.Services;
 
 namespace NonRelationalDatabaseGoal.Controllers;
 
@@ -10,9 +10,9 @@ namespace NonRelationalDatabaseGoal.Controllers;
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly UserService _service;
+    private readonly IUserService _service;
 
-    public UserController(UserService service) => _service = service;
+    public UserController(IUserService service) => _service = service;
 
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] UserParameters parameters) =>
@@ -25,7 +25,7 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateUserRequest user)
     {
-        await _service.CreateAsync(new User
+        await _service.CreateAsync(new AppUser
         {
             Id = Guid.NewGuid().ToString(),
             UserName = user.UserName,
@@ -39,7 +39,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update([FromBody] User user)
+    public async Task<IActionResult> Update([FromBody] AppUser user)
     {
         await _service.UpdateAsync(user);
         return NoContent();

@@ -2,12 +2,13 @@
 using Microsoft.Azure.Cosmos.Linq;
 using NonRelationalDatabaseGoal.Extensions;
 using NonRelationalDatabaseGoal.Extensions.Filtering;
+using NonRelationalDatabaseGoal.Interfaces.Services;
 using NonRelationalDatabaseGoal.Models;
 using NonRelationalDatabaseGoal.Parameters;
 
 namespace NonRelationalDatabaseGoal.Services;
 
-public class ProjectService : GenericService<Project>
+public class ProjectService : GenericService<Project>, IProjectService
 {
     public ProjectService(CosmosClient client) : base(client.GetProjectsContainer())
     {
@@ -47,7 +48,7 @@ public class ProjectService : GenericService<Project>
         {
             if (ticket.ExecutorId is not null)
             {
-                Models.User user = await UsersContainer.ReadItemAsync<Models.User>(
+                Models.AppUser user = await UsersContainer.ReadItemAsync<AppUser>(
                     ticket.ExecutorId,
                     new PartitionKey(ticket.ExecutorId));
 
