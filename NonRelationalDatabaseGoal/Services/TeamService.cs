@@ -56,6 +56,7 @@ public class TeamService : GenericService<Team>
                         new PartitionKey(ticket.ExecutorId));
 
                     user.AssignedTickets.Remove(ticket.Id);
+                    user.Teams.Remove(team.Id);
                     await UsersContainer.UpsertItemAsync(user, new PartitionKey(user.Id));
                 }
 
@@ -67,7 +68,18 @@ public class TeamService : GenericService<Team>
             await ProjectsContainer.DeleteItemAsync<Project>(
                 project.Id,
                 new PartitionKey(project.Id));
-        }    
+        }
+
+        var members = await UsersContainer.GetItemLinqQueryable<Models.User>()
+            .Where(user => user.Teams.Contains(team.Id))
+            .ToFeedIterator()
+            .ReadAllAsync();
+
+        foreach (var member in members)
+        {
+            member.Teams.Remove(team.Id);
+            await UsersContainer.UpsertItemAsync(member, new PartitionKey(member.Id));
+        }
 
         await base.DeleteAsync(id);
     }
