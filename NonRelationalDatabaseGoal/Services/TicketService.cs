@@ -39,6 +39,29 @@ public class TicketService : GenericService<Ticket>
         }
     }
 
+    public override async Task DeleteAsync(string id)
+    {
+        Ticket ticket = await base.GetByIdAsync(id);
+        Project project = await ProjectsContainer.ReadItemAsync<Project>(
+            ticket.ProjectId,
+            new PartitionKey(ticket.ProjectId));
+
+        project.Tickets.Remove(ticket.Id);
+
+        await base.DeleteAsync(ticket.Id);
+        await ProjectsContainer.UpsertItemAsync(project, new PartitionKey(project.Id));
+
+        if (!string.IsNullOrWhiteSpace(ticket.ExecutorId))
+        {
+            Models.User user = await UsersContainer.ReadItemAsync<Models.User>(
+                ticket.ExecutorId,
+                new PartitionKey(ticket.Id));
+
+            user.AssignedTickets.Remove(ticket.Id);
+            await UsersContainer.UpsertItemAsync(user.Id, new PartitionKey(user.Id));
+        }
+    }
+
     public async Task<IEnumerable<Ticket>> GetAsync(TicketParameters parameters) =>
         await Container.GetItemLinqQueryable<Ticket>()
             .ApplyFiltering(parameters)
@@ -74,7 +97,9 @@ public class TicketService : GenericService<Ticket>
                 ticket.ExecutorId,
                 new PartitionKey(ticket.ExecutorId));
 
+            ticket.ExecutorId = null;
             executor.AssignedTickets.Remove(ticket.Id);
+            await base.UpdateAsync(ticket);
             await UsersContainer.UpsertItemAsync(
                 executor,
                 new PartitionKey(executor.Id));
