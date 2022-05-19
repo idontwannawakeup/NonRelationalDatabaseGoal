@@ -9,11 +9,34 @@ namespace NonRelationalDatabaseGoal.Services;
 
 public class TicketService : GenericService<Ticket>
 {
-    protected Container UsersContainer { get; }
-
     public TicketService(CosmosClient client) : base(client.GetTicketsContainer())
     {
         UsersContainer = client.GetUsersContainer();
+        ProjectsContainer = client.GetProjectsContainer();
+    }
+
+    protected Container UsersContainer { get; }
+    protected Container ProjectsContainer { get; }
+
+    public override async Task CreateAsync(Ticket ticket)
+    {
+        await base.CreateAsync(ticket);
+        Project project = await ProjectsContainer.ReadItemAsync<Project>(
+            ticket.ProjectId,
+            new PartitionKey(ticket.ProjectId));
+
+        project.Tickets.Add(ticket.Id);
+        await ProjectsContainer.UpsertItemAsync(project, new PartitionKey(project.Id));
+
+        if (!string.IsNullOrWhiteSpace(ticket.ExecutorId))
+        {
+            Models.User user = await UsersContainer.ReadItemAsync<Models.User>(
+                ticket.ExecutorId,
+                new PartitionKey(ticket.Id));
+
+            user.AssignedTickets.Add(ticket.Id);
+            await UsersContainer.UpsertItemAsync(user.Id, new PartitionKey(user.Id));
+        }
     }
 
     public async Task<IEnumerable<Ticket>> GetAsync(TicketParameters parameters) =>
