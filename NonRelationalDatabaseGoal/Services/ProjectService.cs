@@ -11,10 +11,14 @@ public class ProjectService : GenericService<Project>
 {
     public ProjectService(CosmosClient client) : base(client.GetProjectsContainer())
     {
+        UsersContainer = client.GetUsersContainer();
         TeamsContainer = client.GetTeamsContainer();
+        TicketsContainer = client.GetTicketsContainer();
     }
 
+    protected Container UsersContainer { get; }
     protected Container TeamsContainer { get; }
+    protected Container TicketsContainer { get; }
 
     public override async Task CreateAsync(Project project)
     {
@@ -33,6 +37,28 @@ public class ProjectService : GenericService<Project>
         Team team = await TeamsContainer.ReadItemAsync<Team>(
             project.TeamId,
             new PartitionKey(project.TeamId));
+
+        var tickets = await TicketsContainer.GetItemLinqQueryable<Ticket>()
+            .Where(ticket => ticket.ProjectId == project.Id)
+            .ToFeedIterator()
+            .ReadAllAsync();
+
+        foreach (var ticket in tickets)
+        {
+            if (ticket.ExecutorId is not null)
+            {
+                Models.User user = await UsersContainer.ReadItemAsync<Models.User>(
+                    ticket.ExecutorId,
+                    new PartitionKey(ticket.ExecutorId));
+
+                user.AssignedTickets.Remove(ticket.Id);
+                await UsersContainer.UpsertItemAsync(user, new PartitionKey(user.Id));
+            }
+
+            await TicketsContainer.DeleteItemAsync<Ticket>(
+                ticket.Id,
+                new PartitionKey(ticket.Id));
+        }
 
         team.Projects.Remove(project.Id);
         await base.DeleteAsync(project.Id);
