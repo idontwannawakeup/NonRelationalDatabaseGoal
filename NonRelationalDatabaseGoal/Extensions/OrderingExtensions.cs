@@ -13,11 +13,7 @@ public static class OrderingExtensions
             return queryable;
         }
 
-        var command = parameters.Order switch
-        {
-            Order.Ascending => "OrderBy",
-            Order.Descending => "OrderByDescending"
-        };
+        var command = parameters.Order == Order.Ascending ? "OrderBy" : "OrderByDescending";
 
         var type = typeof(T);
         var property = type.GetProperty(parameters.OrderBy)!;
