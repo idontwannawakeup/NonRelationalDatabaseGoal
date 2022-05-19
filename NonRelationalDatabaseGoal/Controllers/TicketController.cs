@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NonRelationalDatabaseGoal.Models;
+using NonRelationalDatabaseGoal.Models.Requests;
 using NonRelationalDatabaseGoal.Parameters;
 using NonRelationalDatabaseGoal.Services;
 
@@ -22,11 +23,22 @@ public class TicketController : ControllerBase
         Ok(await _service.GetByIdAsync(id));
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Ticket ticket)
+    public async Task<IActionResult> Create([FromBody] CreateTicketRequest ticket)
     {
-        ticket.Id = Guid.NewGuid().ToString();
-        ticket.CreatedAt = DateTime.UtcNow;
-        await _service.CreateAsync(ticket);
+        await _service.CreateAsync(new Ticket
+        {
+            Id = Guid.NewGuid().ToString(),
+            CreatedAt = DateTime.UtcNow,
+            ProjectId = ticket.ProjectId,
+            ExecutorId = ticket.ExecutorId,
+            Title = ticket.Title,
+            Type = ticket.Type,
+            Description = ticket.Description,
+            Status = ticket.Status,
+            Priority = ticket.Priority,
+            Deadline = ticket.Deadline
+        });
+
         return NoContent();
     }
 

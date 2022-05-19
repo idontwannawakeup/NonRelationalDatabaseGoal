@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NonRelationalDatabaseGoal.Models;
+using NonRelationalDatabaseGoal.Models.Requests;
 using NonRelationalDatabaseGoal.Parameters;
 using NonRelationalDatabaseGoal.Services;
 
@@ -22,10 +23,18 @@ public class UserController : ControllerBase
         Ok(await _service.GetByIdAsync(id));
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] User user)
+    public async Task<IActionResult> Create([FromBody] CreateUserRequest user)
     {
-        user.Id = Guid.NewGuid().ToString();
-        await _service.CreateAsync(user);
+        await _service.CreateAsync(new User
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserName = user.UserName,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Profession = user.Profession,
+            Specialization = user.Specialization
+        });
+
         return NoContent();
     }
 

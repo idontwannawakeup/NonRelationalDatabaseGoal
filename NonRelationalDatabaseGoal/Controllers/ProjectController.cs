@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NonRelationalDatabaseGoal.Models;
+using NonRelationalDatabaseGoal.Models.Requests;
 using NonRelationalDatabaseGoal.Parameters;
 using NonRelationalDatabaseGoal.Services;
 
@@ -22,10 +23,17 @@ public class ProjectController : ControllerBase
         Ok(await _service.GetByIdAsync(id));
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Project project)
+    public async Task<IActionResult> Create([FromBody] CreateProjectRequest project)
     {
-        project.Id = Guid.NewGuid().ToString();
-        await _service.CreateAsync(project);
+        await _service.CreateAsync(new Project
+        {
+            Id = Guid.NewGuid().ToString(),
+            TeamId = project.TeamId,
+            Title = project.Title,
+            Type = project.Type,
+            Url = project.Url
+        });
+
         return NoContent();
     }
 
