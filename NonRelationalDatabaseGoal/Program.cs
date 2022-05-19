@@ -1,4 +1,5 @@
 using Microsoft.Azure.Cosmos;
+using NonRelationalDatabaseGoal.Seeding;
 using NonRelationalDatabaseGoal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,8 @@ builder.Services.AddTransient<TeamService>();
 builder.Services.AddTransient<ProjectService>();
 builder.Services.AddTransient<TicketService>();
 
+builder.Services.AddTransient<Seeder>();
+
 builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -44,5 +47,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+if (args.Contains("--seed"))
+{
+    await app.Services.GetRequiredService<Seeder>().SeedDatabaseAsync();
+}
 
 app.Run();
