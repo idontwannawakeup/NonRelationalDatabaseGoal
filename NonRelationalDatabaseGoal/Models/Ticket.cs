@@ -6,7 +6,7 @@ namespace NonRelationalDatabaseGoal.Models;
 public class Ticket : IIdentifiable
 {
     [JsonProperty(PropertyName = "id")]
-    public string Id { get; set; } = default!;
+    public string Id { get; set; } = string.Empty;
 
     [JsonProperty(PropertyName = "projectId")]
     public string ProjectId { get; set; } = default!;

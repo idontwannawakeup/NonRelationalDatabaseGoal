@@ -6,7 +6,7 @@ namespace NonRelationalDatabaseGoal.Models;
 public class Project : IIdentifiable
 {
     [JsonProperty(PropertyName = "id")]
-    public string Id { get; set; } = default!;
+    public string Id { get; set; } = string.Empty;
 
     [JsonProperty(PropertyName = "teamId")]
     public string TeamId { get; set; } = default!;
