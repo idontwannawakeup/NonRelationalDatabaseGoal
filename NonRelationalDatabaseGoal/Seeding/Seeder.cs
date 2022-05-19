@@ -44,7 +44,7 @@ public class Seeder
 
         var project = new Project
         {
-            Id = _userId,
+            Id = _projectId,
             TeamId = _teamId,
             Title = "Blog",
             Type = "Website",

@@ -20,7 +20,6 @@ public class TicketService : GenericService<Ticket>
 
     public override async Task CreateAsync(Ticket ticket)
     {
-        await base.CreateAsync(ticket);
         Project project = await ProjectsContainer.ReadItemAsync<Project>(
             ticket.ProjectId,
             new PartitionKey(ticket.ProjectId));
@@ -32,11 +31,13 @@ public class TicketService : GenericService<Ticket>
         {
             Models.User user = await UsersContainer.ReadItemAsync<Models.User>(
                 ticket.ExecutorId,
-                new PartitionKey(ticket.Id));
+                new PartitionKey(ticket.ExecutorId));
 
             user.AssignedTickets.Add(ticket.Id);
             await UsersContainer.UpsertItemAsync(user.Id, new PartitionKey(user.Id));
         }
+
+        await base.CreateAsync(ticket);
     }
 
     public override async Task DeleteAsync(string id)
